@@ -30,7 +30,7 @@ class DBC implements IteratorAggregate {
 	/**
 	 * Version of the World of Warcraft DBC Library
 	 */
-	const VERSION = 'v1.2';
+	const VERSION = 'v1.1';
 
 	/**
 	 * Defines signature for a DBC file
@@ -265,7 +265,7 @@ class DBC implements IteratorAggregate {
 		if(isset($args[0])) {
 			$scalars = true;
 			foreach($args as $arg) {
-				if(!is_null($arg) && !is_scalar($arg)) {
+				if($scalars && !is_scalar($arg)) {
 					$scalars = false;
 				}
 				if(is_array($arg)) {
@@ -312,10 +312,6 @@ class DBC implements IteratorAggregate {
 
 		fseek($this->_handle, 4);
 		fwrite($this->_handle, pack(self::UINT, ++$this->_recordCount));
-
-		// New record data may have overwritten the string-block
-		// Invalidate its size to enforce writing it on finalization
-		$this->_stringBlockSize = 0;
 	}
 
 	/**
